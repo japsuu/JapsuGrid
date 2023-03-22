@@ -1,0 +1,18 @@
+# "Did you try to turn it on and off again?"
+Enabled: true
+
+# Amount of empty space between each block.
+# Valid range [1, 7].
+BlockSpacing: 3
+
+# Whether to skip all bedrock generation.
+RemoveAllBedrock: true
+
+# Whether to temporarily disable water flow and block gravity in newly generated chunks.
+# Reduces lag by not allowing liquids to start flowing instantly when the chunk is loaded.
+DisableEventsInNewChunks: true
+
+# Blocks that never get removed by the generator.
+NonReplaceableBlocks:
+# - SPAWNER
+# - CHEST
