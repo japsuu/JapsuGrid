@@ -19,6 +19,22 @@ A normal minecraft world, but with 99% of its blocks removed.
 - No liquid spilling when a chunk is loaded: water/lava stays hovering.
 - Very good performance: we intercept the chunk generation process.
 
+## Setup
+
+1. Download and move the plugin to your "Plugins" -folder.
+2. Assign JapsuGrid as your world generator in ```Bukkit.yml```:
+```yaml
+worlds:
+  world:
+    generator: JapsuGrid
+  world_nether:
+    generator: JapsuGrid
+  world_the_end:
+    generator: JapsuGrid
+```
+
+Note: If the lines above are missing from your ```Bukkit.yml```, just add them!
+
 ## Standard config
 
 ```yaml
