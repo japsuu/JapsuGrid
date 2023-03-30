@@ -3,7 +3,6 @@ package org.japsu.japsugrid;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,83 +12,111 @@ import java.util.logging.Logger;
 
 public final class JapsuGrid extends JavaPlugin {
 
-    private static Logger pluginLogger;
-    private static ChunkGenerator chunkGeneratorOverride;
+    public enum GenerationMode {
+        BEFORE_DECORATIONS,
+        AFTER_DECORATIONS
+    }
+
+    public static JapsuGrid Singleton;
+    public static Logger PluginLogger;
+
+    private static org.bukkit.generator.ChunkGenerator chunkGeneratorOverride;
+
+    private GenerationMode generationMode = GenerationMode.AFTER_DECORATIONS;
+    private int blockSpacingInterval = 3;
+    private boolean disableEventsInNewChunks = true;
+    private boolean removeAllBedrock = true;
+    private List<Material> nonReplaceableMaterials = new ArrayList<>();
 
     @Override
     public void onEnable() {
 
-        int DEFAULT_BLOCK_SPACING = 3;
+        Singleton = this;
+        PluginLogger = getLogger();
 
-        new Metrics(this, 18036);
-        pluginLogger = getLogger();
-        FileConfiguration config = this.getConfig();
+        // Copy our config file if needed.
+        saveDefaultConfig();
 
-        // Add config default values.
-        config.addDefault("Enabled", true);
-        config.addDefault("BlockSpacing", DEFAULT_BLOCK_SPACING);
-        config.addDefault("DisableEventsInNewChunks", true);
-        config.addDefault("RemoveAllBedrock", true);
-        config.addDefault("NonReplaceableBlocks", new ArrayList<String>());
+        // Start metrics.
+        try {
+            new Metrics(this, 18036);
+        } catch (Exception ignored) { }
 
-        // Return early if plugin is disabled.
-        boolean enabled = config.getBoolean("Enabled");
-        if(!enabled) return;
+        // Init config.
+        processConfig(this.getConfig());
 
-        // Register listener for disabling events on chunk load.
-        if (config.getBoolean("DisableEventsInNewChunks")){
-            getServer().getPluginManager().registerEvents(new JapsuGridChunkFreezer(this), this);
-        }
+        // Register freezer.
+        if (disableEventsInNewChunks)
+            getServer().getPluginManager().registerEvents(new ChunkFreezer(), this);
 
-        // Configure the blocks we don't want to replace.
-        List<String> nonReplaceableBlocks = config.getStringList("NonReplaceableBlocks");
-        ArrayList<Material> nonReplaceableMaterials = new ArrayList<>();
-        // Convert string input to Materials.
-        for (String nonReplaceableBlock : nonReplaceableBlocks) {
-            Material material = Material.getMaterial(nonReplaceableBlock);
-            if (material == null) {
-                pluginLogger.warning(String.format("Invalid entry in NonReplaceableBlocks (%s)! Skipping...", nonReplaceableBlock));
-                continue;
-            }
-            nonReplaceableMaterials.add(material);
-        }
+        // Override generator.
+        chunkGeneratorOverride = new ChunkGenerator(generationMode, blockSpacingInterval, removeAllBedrock, nonReplaceableMaterials);
 
-        // Configure block spacing.
-        int blockSpacing = config.getInt("BlockSpacing");
-        if(blockSpacing < 1 || blockSpacing > 7){
-            pluginLogger.warning(String.format("Invalid BlockSpacing config value (%s)! Valid range is [1,7] Defaulting to %s...", blockSpacing, DEFAULT_BLOCK_SPACING));
-            blockSpacing = DEFAULT_BLOCK_SPACING;
-        }
-
-        // Increment BlockSpacing by one, because logically it means "amount of space between each block",
-        // but internally it means the interval a block is placed.
-        blockSpacing++;
-
-        // Write & save the config file.
-        config.options().copyDefaults(true);
-        saveConfig();
-
-
-        boolean removeAllBedrock = config.getBoolean("RemoveAllBedrock");
-
-        chunkGeneratorOverride = new JapsuGridChunkGenerator(blockSpacing, removeAllBedrock, nonReplaceableMaterials);
-
-        pluginLogger.info("JapsuGrid enabled!");
+        PluginLogger.info("JapsuGrid enabled!");
     }
 
     @Override
     public void onDisable() {
 
-        pluginLogger.info("JapsuGrid disabled!");
+        PluginLogger.info("JapsuGrid disabled!");
+    }
+
+    private void processConfig(FileConfiguration config){
+
+        // Add the default non-replaceable materials.
+        nonReplaceableMaterials.add(Material.END_PORTAL_FRAME);
+
+        // NonReplaceableMaterials requires special processing, since config cannot save classes:
+        List<String> nonReplaceableBlocks = new ArrayList<>();
+        for (Material nonReplaceableMaterial : nonReplaceableMaterials) {
+            nonReplaceableBlocks.add(nonReplaceableMaterial.toString());
+        }
+
+        // Add config default values.
+        config.addDefault("GenerationMode", generationMode.toString());
+        config.addDefault("BlockSpacing", blockSpacingInterval);
+        config.addDefault("DisableEventsInNewChunks", disableEventsInNewChunks);
+        config.addDefault("RemoveAllBedrock", removeAllBedrock);
+        config.addDefault("NonReplaceableBlocks", nonReplaceableBlocks);
+
+        // Read config values.
+        String generationModeInput =    config.getString("GenerationMode");
+        blockSpacingInterval =          config.getInt("BlockSpacing");
+        disableEventsInNewChunks =      config.getBoolean("DisableEventsInNewChunks");
+        removeAllBedrock =              config.getBoolean("RemoveAllBedrock");
+        nonReplaceableBlocks =          config.getStringList("NonReplaceableBlocks");
+
+        // Configure gen mode.
+        generationMode = GenerationMode.valueOf(generationModeInput);
+
+        // Configure block spacing.
+        if (blockSpacingInterval < 1 || blockSpacingInterval > 7) {
+            PluginLogger.warning(String.format("Invalid BlockSpacing config value (%s)! Valid range is [1,7] Defaulting to 3...", blockSpacingInterval));
+            blockSpacingInterval = 3;
+        }
+        // Increment BlockSpacing by one, because logically the config value means "amount of space between each block",
+        // but internally it means the interval a block is placed.
+        blockSpacingInterval++;
+
+        // Convert strings back to Spigot Materials.
+        nonReplaceableMaterials = new ArrayList<>();
+        for (String nonReplaceableBlock : nonReplaceableBlocks) {
+            Material material = Material.getMaterial(nonReplaceableBlock);
+            if (material == null) {
+                PluginLogger.warning(String.format("Invalid entry in NonReplaceableBlocks (%s)! Skipping...", nonReplaceableBlock));
+                continue;
+            }
+            nonReplaceableMaterials.add(material);
+        }
+
+        // Write & save the config file.
+        config.options().copyDefaults(true);
+        saveConfig();
     }
 
     @Override
-    public ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, String id) {
+    public org.bukkit.generator.ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, String id) {
 
-        // Do not intercept generation if the plugin is disabled.
-        if(chunkGeneratorOverride != null)
-            return chunkGeneratorOverride;
-
-        return super.getDefaultWorldGenerator(worldName, id);
+        return chunkGeneratorOverride;
     }
 }

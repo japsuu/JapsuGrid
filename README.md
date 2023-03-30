@@ -1,23 +1,22 @@
 # JapsuGrid
 
-![Overworld image of JapsuGrid world](/Screenshots/overworld_3.png)
+![Overworld image of JapsuGrid world](/Screenshots/overworld_3_nodecor.png)
 
 ## Info
 
-This spigot plugin implements the ["RaysGrid"](https://www.youtube.com/watch?v=fdYABpmVwKg) world generation:
-A normal minecraft world, but with 99% of its blocks removed.
+**Meet the ["RaysGrid"](https://www.youtube.com/watch?v=fdYABpmVwKg) experience**: A normal minecraft world, but with 99% of its blocks removed.
 
-**A re-iteration of the infamous Sky-Grid**, but instead of generating random blocks, these are the actual blocks that would generate if this were a 'normal' world.
+**A modified version of the oh-so-popular Sky-Grid, but unlike Sky-Grid, the blocks generated are the same as those in a typical Minecraft world.**
 
-*Everything that's possible in a normal world, is also possible here!*
+*Everything that's possible in a normal Minecraft world, is also possible here!*
 
 ## Features
 
-- Structures are generated normally.
+- Structures & decorations can either be generated normally, or "gridified" like all other terrain.
 - Bedrock generation can be turned off.
-- Ability to skip the removal of specific blocks.
+- Ability to skip the removal of specific blocks (end portal frames, chests, what ever you like)!
 - No liquid spilling when a chunk is loaded: water/lava stays hovering.
-- Very good performance: we intercept the chunk generation process.
+- Very reasonable performance: we either intercept the chunk generation process, or do post-processing with BlockPopulators.
 
 ## Setup
 
@@ -38,21 +37,25 @@ Note: If the lines above are missing from your ```Bukkit.yml```, just add them!
 ## Standard config
 
 ```yaml
-# "Did you try to turn it on and off again?"
-Enabled: true
+# When to generate the grid.
+# BEFORE_DECORATIONS: Faster, but leaves all decorations (structures, trees, etc) intact.
+# AFTER_DECORATIONS: Slower, but decimates everything except blocks defined in "NonReplaceableBlocks" (below).
+GenerationMode: AFTER_DECORATIONS
 
 # Amount of empty space between each block.
+# Valid range [1, 7].
 BlockSpacing: 3
 
 # Whether to skip all bedrock generation.
 RemoveAllBedrock: true
 
-# Whether to temporarily disable water flow and block gravity in newly generated chunks.
-# Reduces lag by not allowing liquids to start flowing instantly when the chunk is loaded.
+# Whether to TEMPORARILY disable water flow and block gravity in newly generated chunks.
+# Reduces lag by not allowing liquids to flow when the chunk is loaded.
 DisableEventsInNewChunks: true
 
 # Blocks that never get removed by the generator.
 NonReplaceableBlocks:
+  - END_PORTAL_FRAME
 # - SPAWNER
 # - CHEST
 ```
@@ -65,7 +68,9 @@ NonReplaceableBlocks:
 
 ![Overworld in JapsuGrid world](/Screenshots/overworld_2.png)
 ![Nether in JapsuGrid world](/Screenshots/nether_0.png)
+![Stronghold in JapsuGrid world (nodecor)](/Screenshots/stronghold_nodecor.png)
 ![Stronghold in JapsuGrid world](/Screenshots/overworld_stronghold.png)
+![End island in JapsuGrid world (nodecor)](/Screenshots/end_1_nodecor.png)
 ![End island in JapsuGrid world](/Screenshots/end_island.png)
 
 ## Contributing
