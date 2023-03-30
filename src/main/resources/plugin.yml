@@ -1,0 +1,7 @@
+name: JapsuGrid
+version: '${project.version}'
+main: org.japsu.japsugrid.JapsuGrid
+api-version: 1.19
+load: STARTUP
+authors: [Japsu]
+description: Grid world generator
