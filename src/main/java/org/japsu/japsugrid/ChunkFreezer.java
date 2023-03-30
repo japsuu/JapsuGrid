@@ -36,7 +36,7 @@ public class ChunkFreezer implements Listener {
         // Feels like a hack, but...
         // Don't fix it if it ain't broken!
         // I still have a very nasty feeling that this will cause problems later...
-        return chunk.getInhabitedTime() < 40L || eventDisabledChunks.containsKey(ChunkHelper.getChunkKeyString(chunk));
+        return chunk.getInhabitedTime() < 60L || eventDisabledChunks.containsKey(ChunkHelper.getChunkKeyString(chunk));
     }
 
     private void cleanOldChunks(){
@@ -45,7 +45,7 @@ public class ChunkFreezer implements Listener {
         ArrayList<String> oldChunks = new ArrayList<>();
         for (Map.Entry<String, Long> set : eventDisabledChunks.entrySet()) {
 
-            if(System.currentTimeMillis() - set.getValue() >= 10000){
+            if(System.currentTimeMillis() - set.getValue() >= 5000){
                 oldChunks.add(set.getKey());
             }
         }
