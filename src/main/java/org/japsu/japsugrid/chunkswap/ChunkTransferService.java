@@ -205,6 +205,7 @@ public class ChunkTransferService {
         return "x=" + loc.getBlockX() + ", y=" + loc.getBlockY() + ", z=" + loc.getBlockZ();
     }
 
+    //TODO: Find out what's the problem. Setting new blocks doesn't current do anything.
     public static void setBlockInNativeDataPalette(World world, int chunkX, int chunkZ, Block block, boolean applyPhysics) {
 
         final ServerLevel serverLevel = ((CraftWorld) world).getHandle();
@@ -224,7 +225,7 @@ public class ChunkTransferService {
         //net.minecraft.world.level.block.Block.getId()
         //final IBlockData ibd = net.minecraft.server.v1_8_R3.Block.getByCombinedId(combined);
 
-        serverLevel.setBlock(bp, craftBlock.getNMS(), 1);
-        //levelChunk.setBlockState(bp, craftBlock.getNMS(), applyPhysics);
+        //serverLevel.setBlock(bp, craftBlock.getNMS(), 1);
+        levelChunk.setBlockState(bp, craftBlock.getNMS(), applyPhysics);
     }
 }
