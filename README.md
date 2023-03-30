@@ -68,9 +68,21 @@ NonReplaceableBlocks:
 
 ![Overworld in JapsuGrid world](/Screenshots/overworld_2.png)
 ![Nether in JapsuGrid world](/Screenshots/nether_0.png)
+
+---
+## Stronghold generation
+
+With AFTER_DECORATIONS config value.
 ![Stronghold in JapsuGrid world (nodecor)](/Screenshots/stronghold_nodecor.png)
+With BEFORE_DECORATIONS config value.
 ![Stronghold in JapsuGrid world](/Screenshots/overworld_stronghold.png)
+
+---
+## End island generation
+
+With AFTER_DECORATIONS config value.
 ![End island in JapsuGrid world (nodecor)](/Screenshots/end_1_nodecor.png)
+With BEFORE_DECORATIONS config value.
 ![End island in JapsuGrid world](/Screenshots/end_island.png)
 
 ## Contributing
