@@ -6,6 +6,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class ChunkHelper {
 
+    public static String getChunkKeyString(Chunk chunk){
+        return "w:" + chunk.getWorld().getName() + "x:" + chunk.getX() + "z:" + chunk.getZ();
+    }
+
     public static long getChunkKey(Chunk chunk) {
         return getChunkKey(chunk.getX(), chunk.getZ());
     }

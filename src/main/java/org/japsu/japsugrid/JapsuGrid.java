@@ -28,6 +28,10 @@ public final class JapsuGrid extends JavaPlugin {
     private boolean removeAllBedrock = true;
     private List<Material> nonReplaceableMaterials = new ArrayList<>();
 
+    public void ScheduleSyncRepeatingTask(@NotNull Runnable task, long delay, long period) {
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, task, delay, period);
+    }
+
     @Override
     public void onEnable() {
 
