@@ -2,12 +2,10 @@ package org.japsu.japsugrid;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
-import org.bukkit.material.MaterialData;
 import org.japsu.japsugrid.populators.ChunkPopulator;
 import org.jetbrains.annotations.NotNull;
 

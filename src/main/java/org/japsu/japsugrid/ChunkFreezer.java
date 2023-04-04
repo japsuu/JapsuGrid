@@ -20,7 +20,7 @@ public class ChunkFreezer implements Listener {
 
     private final HashMap<String, Long> eventDisabledChunks;
 
-    public ChunkFreezer(){
+    public ChunkFreezer() {
         eventDisabledChunks = new HashMap<>();
 
         // Clean up the HashMap every X seconds.

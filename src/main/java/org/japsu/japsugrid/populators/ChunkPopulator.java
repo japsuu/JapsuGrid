@@ -3,7 +3,6 @@ package org.japsu.japsugrid.populators;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Leaves;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
