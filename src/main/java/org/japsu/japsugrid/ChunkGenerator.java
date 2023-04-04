@@ -2,8 +2,12 @@ package org.japsu.japsugrid;
 
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Leaves;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.material.MaterialData;
 import org.japsu.japsugrid.populators.ChunkPopulator;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,17 +18,11 @@ import java.util.Random;
 
 public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
 
-    private final JapsuGrid.GenerationMode generationMode;
-    private final int blockSpacingInterval;
-    private final boolean removeAllBedrock;
     private final HashSet<Material> nonReplaceableMaterials;
 
-    public ChunkGenerator(JapsuGrid.GenerationMode generationMode, int blockSpacingInterval, boolean removeAllBedrock, List<Material> nonReplaceableMaterials){
-        this.generationMode = generationMode;
-        this.blockSpacingInterval = blockSpacingInterval;
-        this.removeAllBedrock = removeAllBedrock;
+    public ChunkGenerator() {
         this.nonReplaceableMaterials = new HashSet<>();
-        this.nonReplaceableMaterials.addAll(nonReplaceableMaterials);
+        this.nonReplaceableMaterials.addAll(JapsuGrid.nonReplaceableMaterials);
     }
 
     @Override
@@ -48,7 +46,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     @Override
     public void generateBedrock(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
 
-        if(generationMode != JapsuGrid.GenerationMode.BEFORE_DECORATIONS) return;
+        if(JapsuGrid.generationMode != JapsuGrid.GenerationMode.BEFORE_DECORATIONS) return;
 
         generateGridSpigot(chunkX, chunkZ, chunkData);
     }
@@ -57,10 +55,10 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
 
-        if(generationMode != JapsuGrid.GenerationMode.AFTER_DECORATIONS) return super.getDefaultPopulators(world);
+        if(JapsuGrid.generationMode != JapsuGrid.GenerationMode.AFTER_DECORATIONS) return super.getDefaultPopulators(world);
 
         ArrayList<BlockPopulator> pops = new ArrayList<>();
-        pops.add(new ChunkPopulator(blockSpacingInterval, removeAllBedrock, nonReplaceableMaterials));
+        pops.add(new ChunkPopulator(nonReplaceableMaterials));
         return pops;
     }
 
@@ -91,7 +89,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
                         continue;
 
                     // Delete required blocks.
-                    if (worldX % blockSpacingInterval != 0 || y % blockSpacingInterval != 0 || worldZ % blockSpacingInterval != 0) {
+                    if (worldX % JapsuGrid.blockSpacingInterval != 0 || y % JapsuGrid.blockSpacingInterval != 0 || worldZ % JapsuGrid.blockSpacingInterval != 0) {
 
                         // Skip blocks found in config.
                         if (nonReplaceableMaterials.contains(currentMaterial)) {
@@ -100,8 +98,18 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
 
                         chunkData.setBlock(x, y, z, Material.AIR);
 
-                    } else if (removeAllBedrock && currentMaterial == Material.BEDROCK) {
+                    } else if (JapsuGrid.removeAllBedrock && currentMaterial == Material.BEDROCK) {
                         chunkData.setBlock(x, y, z, Material.AIR);
+                    } else {
+                        // Executed only for blocks which are not removed.
+                        BlockData blockData = chunkData.getBlockData(x, y, z);
+
+                        // Set leaves persistence.
+                        if(JapsuGrid.disableNaturalLeafDecay) {
+                            if(blockData instanceof Leaves) {
+                                ((Leaves)blockData).setPersistent(true);
+                            }
+                        }
                     }
                 }
             }

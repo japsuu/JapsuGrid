@@ -20,13 +20,15 @@ public final class JapsuGrid extends JavaPlugin {
     public static JapsuGrid Singleton;
     public static Logger PluginLogger;
 
-    private static org.bukkit.generator.ChunkGenerator chunkGeneratorOverride;
+    public static GenerationMode generationMode = GenerationMode.AFTER_DECORATIONS;
+    public static int blockSpacingInterval = 3;
+    public static boolean disableEventsInNewChunks = true;
+    public static boolean removeAllBedrock = true;
+    public static boolean disableNaturalLeafDecay = true;
+    public static boolean disableNaturalItemFramePop = true;
+    public static List<Material> nonReplaceableMaterials = new ArrayList<>();
 
-    private GenerationMode generationMode = GenerationMode.AFTER_DECORATIONS;
-    private int blockSpacingInterval = 3;
-    private boolean disableEventsInNewChunks = true;
-    private boolean removeAllBedrock = true;
-    private List<Material> nonReplaceableMaterials = new ArrayList<>();
+    private static org.bukkit.generator.ChunkGenerator chunkGeneratorOverride;
 
     public void ScheduleSyncRepeatingTask(@NotNull Runnable task, long delay, long period) {
         getServer().getScheduler().scheduleSyncRepeatingTask(this, task, delay, period);
@@ -53,8 +55,11 @@ public final class JapsuGrid extends JavaPlugin {
         if (disableEventsInNewChunks)
             getServer().getPluginManager().registerEvents(new ChunkFreezer(), this);
 
+        if(disableNaturalItemFramePop)
+            getServer().getPluginManager().registerEvents(new ItemFrameFixer(), this);
+
         // Override generator.
-        chunkGeneratorOverride = new ChunkGenerator(generationMode, blockSpacingInterval, removeAllBedrock, nonReplaceableMaterials);
+        chunkGeneratorOverride = new ChunkGenerator();
 
         PluginLogger.info("JapsuGrid enabled!");
     }
@@ -81,6 +86,8 @@ public final class JapsuGrid extends JavaPlugin {
         config.addDefault("BlockSpacing", blockSpacingInterval);
         config.addDefault("DisableEventsInNewChunks", disableEventsInNewChunks);
         config.addDefault("RemoveAllBedrock", removeAllBedrock);
+        config.addDefault("DisableNaturalLeafDecay", disableNaturalLeafDecay);
+        config.addDefault("DisableNaturalItemFramePop", disableNaturalItemFramePop);
         config.addDefault("NonReplaceableBlocks", nonReplaceableBlocks);
 
         // Read config values.
@@ -88,6 +95,8 @@ public final class JapsuGrid extends JavaPlugin {
         blockSpacingInterval =          config.getInt("BlockSpacing");
         disableEventsInNewChunks =      config.getBoolean("DisableEventsInNewChunks");
         removeAllBedrock =              config.getBoolean("RemoveAllBedrock");
+        disableNaturalLeafDecay =           config.getBoolean("DisableNaturalLeafDecay");
+        disableNaturalItemFramePop =        config.getBoolean("DisableNaturalItemFramePop");
         nonReplaceableBlocks =          config.getStringList("NonReplaceableBlocks");
 
         // Configure gen mode.

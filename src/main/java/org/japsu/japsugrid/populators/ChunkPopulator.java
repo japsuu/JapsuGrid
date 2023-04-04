@@ -1,9 +1,13 @@
 package org.japsu.japsugrid.populators;
 
 import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Leaves;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
+import org.japsu.japsugrid.JapsuGrid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -11,13 +15,9 @@ import java.util.Random;
 
 public class ChunkPopulator extends BlockPopulator {
 
-    private final int blockSpacingInterval;
-    private final boolean removeAllBedrock;
     private final HashSet<Material> nonReplaceableMaterials;
 
-    public ChunkPopulator(int blockSpacingInterval, boolean removeAllBedrock, HashSet<Material> nonReplaceableMaterials) {
-        this.blockSpacingInterval = blockSpacingInterval;
-        this.removeAllBedrock = removeAllBedrock;
+    public ChunkPopulator(HashSet<Material> nonReplaceableMaterials) {
         this.nonReplaceableMaterials = nonReplaceableMaterials;
     }
 
@@ -66,7 +66,7 @@ public class ChunkPopulator extends BlockPopulator {
                         continue;
 
                     // Delete blocks that fall outside the grid pattern.
-                    if (worldX % blockSpacingInterval != 0 || y % blockSpacingInterval != 0 || worldZ % blockSpacingInterval != 0) {
+                    if (worldX % JapsuGrid.blockSpacingInterval != 0 || y % JapsuGrid.blockSpacingInterval != 0 || worldZ % JapsuGrid.blockSpacingInterval != 0) {
 
                         // Skip deletion for blocks found in config.
                         if (nonReplaceableMaterials.contains(material)) {
@@ -76,8 +76,18 @@ public class ChunkPopulator extends BlockPopulator {
                         limitedRegion.setType(worldX, y, worldZ, Material.AIR);
 
                         // Remove bedrock if required.
-                    } else if (removeAllBedrock && material == Material.BEDROCK) {
+                    } else if (JapsuGrid.removeAllBedrock && material == Material.BEDROCK) {
                         limitedRegion.setType(worldX, y, worldZ, Material.AIR);
+                    } else {
+                        // Executed only for blocks which are not removed.
+                        BlockData blockData = limitedRegion.getBlockData(x, y, z);
+
+                        // Set leaves persistence.
+                        if(JapsuGrid.disableNaturalLeafDecay) {
+                            if(blockData instanceof Leaves) {
+                                ((Leaves)blockData).setPersistent(true);
+                            }
+                        }
                     }
                 }
             }
