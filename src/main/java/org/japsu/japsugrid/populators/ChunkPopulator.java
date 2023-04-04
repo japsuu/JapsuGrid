@@ -80,7 +80,7 @@ public class ChunkPopulator extends BlockPopulator {
                         limitedRegion.setType(worldX, y, worldZ, Material.AIR);
                     } else {
                         // Executed only for blocks which are not removed.
-                        BlockData blockData = limitedRegion.getBlockData(x, y, z);
+                        BlockData blockData = limitedRegion.getBlockData(worldX, y, worldZ);
 
                         // Set leaves persistence.
                         if(JapsuGrid.disableNaturalLeafDecay) {
