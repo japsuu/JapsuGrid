@@ -85,7 +85,9 @@ public class ChunkPopulator extends BlockPopulator {
                         // Set leaves persistence.
                         if(JapsuGrid.disableNaturalLeafDecay) {
                             if(blockData instanceof Leaves) {
-                                ((Leaves)blockData).setPersistent(true);
+                                Leaves leaves = (Leaves) blockData;
+                                leaves.setPersistent(true);
+                                limitedRegion.setBlockData(worldX, y, worldZ, leaves);
                             }
                         }
                     }
