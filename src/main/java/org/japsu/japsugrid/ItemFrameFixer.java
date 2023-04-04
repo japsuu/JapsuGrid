@@ -1,6 +1,8 @@
 package org.japsu.japsugrid;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
@@ -22,10 +24,17 @@ public class ItemFrameFixer implements Listener {
             if(entity instanceof ItemFrame) {
 
                 ItemFrame frame = ((ItemFrame) entity);
-                frame.getItem();
+                Location originalLocation = entity.getLocation();
 
+                // Add a new block to support the ItemFrame.
+                Location supportingBlockLocation = originalLocation.getBlock().getRelative(frame.getAttachedFace()).getLocation();
+                event.getWorld().getBlockAt(supportingBlockLocation).setType(Material.GLASS);
+
+                /*
                 // Get the item frame's item, and drop it to the world.
-                Item item = event.getWorld().dropItem(entity.getLocation(), frame.getItem());
+                Location originalLocation = entity.getLocation();
+                Location blockLocation = new Location(event.getWorld(), originalLocation.getBlockX(), originalLocation.getBlockY(), originalLocation.getBlockZ());
+                Item item = event.getWorld().dropItem(blockLocation, frame.getItem().clone());
 
                 // Disable item despawning.
                 item.setUnlimitedLifetime(true);
@@ -33,7 +42,7 @@ public class ItemFrameFixer implements Listener {
                 item.setGravity(false);
 
                 // Clean up the frame.
-                frame.remove();
+                frame.setItem(null);*/
             }
         }
     }
