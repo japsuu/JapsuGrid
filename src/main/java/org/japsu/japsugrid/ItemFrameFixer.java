@@ -27,20 +27,6 @@ public class ItemFrameFixer implements Listener {
                 // Add a new block to support the ItemFrame.
                 Location supportingBlockLocation = originalLocation.getBlock().getRelative(frame.getAttachedFace()).getLocation();
                 event.getWorld().getBlockAt(supportingBlockLocation).setType(Material.GLASS);
-
-                /*
-                // Get the item frame's item, and drop it to the world.
-                Location originalLocation = entity.getLocation();
-                Location blockLocation = new Location(event.getWorld(), originalLocation.getBlockX(), originalLocation.getBlockY(), originalLocation.getBlockZ());
-                Item item = event.getWorld().dropItem(blockLocation, frame.getItem().clone());
-
-                // Disable item despawning.
-                item.setUnlimitedLifetime(true);
-                // Disable gravity to let item float.
-                item.setGravity(false);
-
-                // Clean up the frame.
-                frame.setItem(null);*/
             }
         }
     }
