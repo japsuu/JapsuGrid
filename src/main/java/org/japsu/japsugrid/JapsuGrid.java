@@ -95,8 +95,8 @@ public final class JapsuGrid extends JavaPlugin {
         blockSpacingInterval =          config.getInt("BlockSpacing");
         disableEventsInNewChunks =      config.getBoolean("DisableEventsInNewChunks");
         removeAllBedrock =              config.getBoolean("RemoveAllBedrock");
-        disableNaturalLeafDecay =           config.getBoolean("DisableNaturalLeafDecay");
-        disableNaturalItemFramePop =        config.getBoolean("DisableNaturalItemFramePop");
+        disableNaturalLeafDecay =       config.getBoolean("DisableNaturalLeafDecay");
+        disableNaturalItemFramePop =    config.getBoolean("DisableNaturalItemFramePop");
         nonReplaceableBlocks =          config.getStringList("NonReplaceableBlocks");
 
         // Configure gen mode.
