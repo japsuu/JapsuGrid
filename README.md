@@ -32,7 +32,8 @@ worlds:
     generator: JapsuGrid
 ```
 
-Note: If the lines above are missing from your ```Bukkit.yml```, just add them!
+> [!NOTE]  
+> If the lines above are missing from your ```Bukkit.yml```, just add them!
 
 ## Standard config
 
@@ -66,9 +67,11 @@ NonReplaceableBlocks:
 # - CHEST
 ```
 
+<!--
 ## Usage statistics
 
 [![Usage statistics](https://bstats.org/signatures/bukkit/JapsuGrid.svg)](https://bstats.org/plugin/bukkit/JapsuGrid/18037)
+-->
 
 ## Gallery
 
@@ -86,12 +89,12 @@ NonReplaceableBlocks:
 
 ## Stronghold generation
 
-With AFTER_DECORATIONS config value.
+With `AFTER_DECORATIONS` config value.
 
 <img src="/Screenshots/stronghold_nodecor.png" width="512">
 <!--![Stronghold in JapsuGrid world (nodecor)](/Screenshots/stronghold_nodecor.png)-->
 
-With BEFORE_DECORATIONS config value.
+With `BEFORE_DECORATIONS` config value.
 
 <img src="/Screenshots/overworld_stronghold.png" width="512">
 <!--![Stronghold in JapsuGrid world](/Screenshots/overworld_stronghold.png)-->
@@ -100,12 +103,12 @@ With BEFORE_DECORATIONS config value.
 
 ## End island generation
 
-With AFTER_DECORATIONS config value.
+With `AFTER_DECORATIONS` config value.
 
 <img src="/Screenshots/end_1_nodecor.png" width="512">
 <!--![End island in JapsuGrid world (nodecor)](/Screenshots/end_1_nodecor.png)-->
 
-With BEFORE_DECORATIONS config value.
+With `BEFORE_DECORATIONS` config value.
 
 <img src="/Screenshots/end_island.png" width="512"></br>
 <!--![End island in JapsuGrid world](/Screenshots/end_island.png)-->
