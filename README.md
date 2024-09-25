@@ -49,6 +49,12 @@ BlockSpacing: 3
 # Whether to skip all bedrock generation.
 RemoveAllBedrock: true
 
+# Whether to disable decay for naturally generated leaf blocks.
+DisableNaturalLeafDecay: true
+
+# Whether to disable popping off naturally generated item frames.
+DisableNaturalItemFramePop: true
+
 # Whether to TEMPORARILY disable water flow and block gravity in newly generated chunks.
 # Reduces lag by not allowing liquids to flow when the chunk is loaded.
 DisableEventsInNewChunks: true
