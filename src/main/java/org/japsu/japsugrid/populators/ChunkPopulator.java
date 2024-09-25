@@ -49,10 +49,8 @@ public class ChunkPopulator extends BlockPopulator {
         //
         // As far as I know there's sadly currently no (simple) way around this, without dabbling with NMS.
         for (int x = -buffer; x < 16 + buffer; x++) {
+            int worldX = worldXBase + x;
             for (int z = -buffer; z < 16 + buffer; z++) {
-
-                // Calculate horizontal position from base.
-                int worldX = worldXBase + x;
                 int worldZ = worldZBase + z;
 
                 // Loop vertically.
@@ -74,9 +72,10 @@ public class ChunkPopulator extends BlockPopulator {
 
                         limitedRegion.setType(worldX, y, worldZ, Material.AIR);
 
-                        // Remove bedrock if required.
                     } else if (JapsuGrid.removeAllBedrock && material == Material.BEDROCK) {
+                        // Remove bedrock if required.
                         limitedRegion.setType(worldX, y, worldZ, Material.AIR);
+
                     } else {
                         // Executed only for blocks which are not removed.
                         BlockData blockData = limitedRegion.getBlockData(worldX, y, worldZ);
