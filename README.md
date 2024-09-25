@@ -111,6 +111,11 @@ With `AFTER_DECORATIONS` config value.
 
 <img src="/Screenshots/ancient_city_1.png" width="512">
 
+## Developer info
+
+The main branch is reserved for the latest version of the plugin.
+Previous versions are preserved in their own respective branches.
+
 ## Contributing
 
 Feel free to submit any PRs :)
